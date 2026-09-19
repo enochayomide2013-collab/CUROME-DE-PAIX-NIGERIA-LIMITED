@@ -674,7 +674,7 @@ Your job is to answer all user questions strictly based on the Curome website co
 - Official Name: Curome de Paix Nigeria Limited (trading as Curome de Paix Energy Nigeria Limited)
 - CAC Registration: RC-7473017
 - Physical Office & Factory Address: Omodu Street off NTA Road, Port Harcourt, Rivers State, Nigeria
-- Direct Phone: +234 8039114936
+- Direct Phone: +234 8039114946
 - WhatsApp Procurement Desk: +234 9169039015
 - Official Transmission Email: decuromeintl@gmail.com
 - Managing Director: Engr. Decurome (Chartered Mechanical & Marine Systems Engineer)

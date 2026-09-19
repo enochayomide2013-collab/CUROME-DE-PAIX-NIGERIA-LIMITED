@@ -97,7 +97,7 @@ All corporate deliveries include verifiable Mill Test Certificates (MTC), Certif
     id: 'faq-emergency-shutdown',
     category: 'shipping',
     question: 'Do you offer emergency expedited dispatch for rig shutdowns and offshore crew changes?',
-    answer: `Yes. We operate an active 24/7 emergency response logistics channel for time-critical oilfield shut-downs, unexpected safety gear replenishments, and sudden crew vessel mobilizations. By contacting our emergency WhatsApp hotline (**+234 9169039015**) or phone (**+234 8039114936**), ready in-stock PPE packages can be packaged and mobilized to your site or jetty in Port Harcourt within **2 to 4 hours**.`,
+    answer: `Yes. We operate an active 24/7 emergency response logistics channel for time-critical oilfield shut-downs, unexpected safety gear replenishments, and sudden crew vessel mobilizations. By contacting our emergency WhatsApp hotline (**+234 9169039015**) or phone (**+234 8039114946**), ready in-stock PPE packages can be packaged and mobilized to your site or jetty in Port Harcourt within **2 to 4 hours**.`,
     highlights: [
       '2 to 4 Hour rapid dispatch for shut-down emergencies',
       'Direct contact via dedicated WhatsApp desk (+234 9169039015)',

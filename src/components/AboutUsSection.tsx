@@ -181,18 +181,18 @@ export const AboutUsSection: React.FC = () => {
               Management & Technical Direction
             </div>
             <h3 className="text-2xl sm:text-3xl font-black text-slate-900">
-              Experienced Leadership in HSE & Engineering
+              Executive Leadership
             </h3>
             <p className="text-sm text-slate-600 max-w-xl mx-auto">
-              Our executive leadership brings decades of oilfield experience, HSE management, and textile engineering.
+              Our executive management is spearheaded by Engr. Adebayo, driving technical HSE standards and industrial procurement.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="flex justify-center">
             {LEADERSHIP_TEAM.map((member, mIdx) => (
               <div
                 key={mIdx}
-                className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-2xs flex flex-col justify-between space-y-4"
+                className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-2xs flex flex-col justify-between space-y-4 max-w-md w-full"
               >
                 <div className="space-y-4">
                   <div className="w-20 h-20 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">

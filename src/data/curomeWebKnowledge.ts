@@ -188,7 +188,7 @@ export const CUROME_WEB_KNOWLEDGE: WebKnowledgeItem[] = [
       'address', 'location', 'office', 'where are you located', 'rc number', 'registration',
       'cac', 'phone', 'phone number', 'email', 'contact', 'nta road', 'port harcourt', 'who is curome'
     ],
-    summary: 'Curome de Paix Nigeria Limited (RC-7473017), located at Omodu Street off NTA Road, Port Harcourt, Rivers State. Phone: +234 8039114936.',
+    summary: 'Curome de Paix Nigeria Limited (RC-7473017), located at Omodu Street off NTA Road, Port Harcourt, Rivers State. Phone: +234 8039114946.',
     details: `**Curome de Paix Nigeria Limited Corporate Identity:**
 • **Corporate Registration**: Registered with the Corporate Affairs Commission under **RC-7473017**.
 • **Commercial Identity**: Also trades as Curome de Paix Energy Nigeria Limited (CPD Energy).
