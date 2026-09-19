@@ -1,0 +1,367 @@
+[
+  {
+    "id": "ord-84729103948",
+    "ticketId": "CDP-TICKET-84729103948",
+    "ticketNumber": 84729103948,
+    "clientName": "Engr. Dumo Briggs",
+    "companyName": "Niger Delta Offshore Logistics Ltd",
+    "email": "dumo.briggs@nigerdelta-logistics.com",
+    "phone": "+234 803 555 0192",
+    "deliveryAddress": "Plot 14 Trans-Amadi Industrial Layout, Port Harcourt, Rivers State",
+    "items": [
+      {
+        "name": "Heavy-Duty Construction Site High-Ankle Safety Boots (S3 SRC)",
+        "category": "Boots",
+        "quantity": 150,
+        "unitPrice": 34500,
+        "specs": "Sizes Euro 41 to 45 with deep mud lug grip and 200J steel toe"
+      },
+      {
+        "name": "Heavy-Duty Industrial Cotton Coveralls (HD-100)",
+        "category": "Coveralls",
+        "quantity": 50,
+        "unitPrice": 28500,
+        "specs": "Orange 290 GSM with 3M Scotchlite reflective stripes"
+      }
+    ],
+    "status": "Dispatched",
+    "totalAmount": 6600000,
+    "dateCreated": "2026-09-18 09:30:00",
+    "lastUpdated": "2026-09-19 14:15:00",
+    "estimatedDelivery": "Same-day (Within 2-4 Hours across Port Harcourt)",
+    "carrierOrDriver": "Curome Logistics Transit Van (Driver: Austin K. - 0803-911-4936)",
+    "dispatchLocation": "Dispatched from Omodu St Warehouse off NTA Road, Port Harcourt",
+    "trackingSteps": [
+      {
+        "stage": "Received",
+        "status": "completed",
+        "timestamp": "Sep 18, 09:30 AM",
+        "location": "Port Harcourt Sales Desk",
+        "note": "Formal procurement requisition confirmed and logged under RC-7473017.",
+        "handlerName": "Procurement Desk"
+      },
+      {
+        "stage": "Processing",
+        "status": "completed",
+        "timestamp": "Sep 18, 11:45 AM",
+        "location": "Off NTA Road Factory",
+        "note": "Batch allocation and size sorting completed from warehouse reserve.",
+        "handlerName": "Inventory Control"
+      },
+      {
+        "stage": "Quality Check",
+        "status": "completed",
+        "timestamp": "Sep 18, 04:20 PM",
+        "location": "QA/QC Inspection Bay",
+        "note": "Impact resistance and puncture-proof steel plate checks certified by Engr. Adebayo.",
+        "handlerName": "Engr. Adebayo (QA Lead)"
+      },
+      {
+        "stage": "Packed",
+        "status": "completed",
+        "timestamp": "Sep 19, 10:00 AM",
+        "location": "Dispatch Packaging Bay",
+        "note": "Double-sealed weatherproof cartons strapped and manifest stamped.",
+        "handlerName": "Logistics Dispatch"
+      },
+      {
+        "stage": "Dispatched",
+        "status": "current",
+        "timestamp": "Sep 19, 02:15 PM",
+        "location": "In Transit: Trans-Amadi Corridor, Port Harcourt",
+        "note": "En route to delivery site. Driver contact: 0803-911-4936.",
+        "handlerName": "Driver Austin K."
+      },
+      {
+        "stage": "Delivered",
+        "status": "pending",
+        "timestamp": "Pending Arrival",
+        "location": "Plot 14 Trans-Amadi",
+        "note": "Awaiting physical handover and recipient goods-received voucher signature.",
+        "handlerName": "Site HSE Receiving Desk"
+      }
+    ],
+    "thingsNotWanted": "No plastic toe caps, no uncertified footwear",
+    "customNotes": "Priority offshore mobilization order. Direct site drop-off.",
+    "source": "contract"
+  },
+  {
+    "id": "ord-29481039841",
+    "ticketId": "CDP-TICKET-29481039841",
+    "ticketNumber": 29481039841,
+    "clientName": "Chinedu Okafor",
+    "companyName": "Apex Pipeline & Marine Services",
+    "email": "c.okafor@apexpipeline.ng",
+    "phone": "+234 812 443 9021",
+    "deliveryAddress": "Onne Oil & Gas Free Zone, Federal Lighter Terminal (FLT), Rivers State",
+    "items": [
+      {
+        "name": "Industrial Cranial Safety Helmet (Ratchet Wheel)",
+        "category": "Helmets",
+        "quantity": 30,
+        "unitPrice": 8500,
+        "specs": "Safety White with 4-point chin strap harness"
+      },
+      {
+        "name": "Anti-Fog Ballistic UV400 Safety Glasses",
+        "category": "Glasses",
+        "quantity": 45,
+        "unitPrice": 4200,
+        "specs": "Clear polycarbonate anti-scratch lenses"
+      },
+      {
+        "name": "Full-Body Construction Fall Arrest Harness & Double Lanyard (EN 361)",
+        "category": "Fall Protection",
+        "quantity": 10,
+        "unitPrice": 26500,
+        "specs": "Twin rebar scaffold hooks and shock absorber"
+      }
+    ],
+    "status": "Packed",
+    "totalAmount": 709000,
+    "dateCreated": "2026-09-18 14:00:00",
+    "lastUpdated": "2026-09-19 11:30:00",
+    "estimatedDelivery": "Tomorrow by 11:00 AM (Onne Free Zone Express)",
+    "carrierOrDriver": "Curome Heavy Delivery Truck (Rivers Logistics Route #3)",
+    "dispatchLocation": "Staging Dock, Omodu St Warehouse off NTA Road, Port Harcourt",
+    "trackingSteps": [
+      {
+        "stage": "Received",
+        "status": "completed",
+        "timestamp": "Sep 18, 02:00 PM",
+        "location": "Port Harcourt Sales Desk",
+        "note": "Requisition verified against Onne Oil & Gas Free Zone gate requirements.",
+        "handlerName": "Procurement Desk"
+      },
+      {
+        "stage": "Processing",
+        "status": "completed",
+        "timestamp": "Sep 18, 04:30 PM",
+        "location": "Warehouse Storage",
+        "note": "Inventory pulled and custom harness safety inspection completed.",
+        "handlerName": "Warehouse Team"
+      },
+      {
+        "stage": "Quality Check",
+        "status": "completed",
+        "timestamp": "Sep 19, 09:00 AM",
+        "location": "Testing Bay",
+        "note": "Optical clarity tested and harness breaking strain certified.",
+        "handlerName": "Engr. Adebayo"
+      },
+      {
+        "stage": "Packed",
+        "status": "current",
+        "timestamp": "Sep 19, 11:30 AM",
+        "location": "Staging Dock",
+        "note": "Palletized with weather-resistant shrink-wrap for transit to Onne.",
+        "handlerName": "Logistics Dispatch"
+      },
+      {
+        "stage": "Dispatched",
+        "status": "pending",
+        "timestamp": "Scheduled for Morning Dispatch",
+        "location": "Port Harcourt to Onne Highway",
+        "note": "Awaiting convoy departure for Port Harcourt-Eleme-Onne corridor.",
+        "handlerName": "Driver Team"
+      },
+      {
+        "stage": "Delivered",
+        "status": "pending",
+        "timestamp": "Pending",
+        "location": "Onne Free Zone FLT Gate",
+        "note": "Pending gate pass clearance and site handover.",
+        "handlerName": "Onne HSE Inward Officer"
+      }
+    ],
+    "thingsNotWanted": "No uncertified non-EN harnesses",
+    "customNotes": "Driver requires Onne Free Zone entry pass.",
+    "source": "cart"
+  },
+  {
+    "id": "ord-78192039182",
+    "ticketId": "CDP-TICKET-78192039182",
+    "ticketNumber": 78192039182,
+    "clientName": "Alhaji Bashir Mohammed",
+    "companyName": "Bonny Island LNG Marine Contractors",
+    "email": "b.mohammed@bonnylngcontractors.com",
+    "phone": "+234 802 881 2940",
+    "deliveryAddress": "Marine Jetty Terminal, Bonny Island, Rivers State",
+    "items": [
+      {
+        "name": "ABC Dry Chemical Powder (DCP) Fire Extinguisher (6kg / 9kg)",
+        "category": "Extinguishers",
+        "quantity": 12,
+        "unitPrice": 19500,
+        "specs": "6kg cylinders with wall-mounting brackets and pressure gauge"
+      },
+      {
+        "name": "Carbon Dioxide (CO2) Electrical Fire Extinguisher (5kg)",
+        "category": "Extinguishers",
+        "quantity": 6,
+        "unitPrice": 36000,
+        "specs": "5kg clean agent cryogenic cylinder for electrical panels"
+      },
+      {
+        "name": "Industrial Emergency Fire Blanket (1.8m × 1.8m)",
+        "category": "Extinguishers",
+        "quantity": 10,
+        "unitPrice": 9500,
+        "specs": "Quick-release wall pouches"
+      }
+    ],
+    "status": "Delivered",
+    "totalAmount": 545000,
+    "dateCreated": "2026-09-17 08:00:00",
+    "lastUpdated": "2026-09-19 09:45:00",
+    "estimatedDelivery": "Delivered Successfully",
+    "carrierOrDriver": "Bonny River Marine Cargo Vessel (Skipper E. Jumbo)",
+    "dispatchLocation": "Abonnema Wharf Marine Terminal / Bonny Jetty",
+    "trackingSteps": [
+      {
+        "stage": "Received",
+        "status": "completed",
+        "timestamp": "Sep 17, 08:00 AM",
+        "location": "Port Harcourt Sales Desk",
+        "note": "Fire safety replenishment order authorized.",
+        "handlerName": "Procurement Desk"
+      },
+      {
+        "stage": "Processing",
+        "status": "completed",
+        "timestamp": "Sep 17, 10:15 AM",
+        "location": "Cylinder Inspection Lab",
+        "note": "Hydrostatic pressure checks and tamper seals verified.",
+        "handlerName": "Fire Systems Tech"
+      },
+      {
+        "stage": "Quality Check",
+        "status": "completed",
+        "timestamp": "Sep 17, 03:00 PM",
+        "location": "QA Testing Station",
+        "note": "BS EN3 certification stamps applied and certified by Engr. Adebayo.",
+        "handlerName": "Engr. Adebayo"
+      },
+      {
+        "stage": "Packed",
+        "status": "completed",
+        "timestamp": "Sep 18, 08:30 AM",
+        "location": "Marine Cargo Dock",
+        "note": "Cushioned in wooden maritime shock-resistant export crates.",
+        "handlerName": "Logistics Dispatch"
+      },
+      {
+        "stage": "Dispatched",
+        "status": "completed",
+        "timestamp": "Sep 18, 11:00 AM",
+        "location": "Bonny River Waterway",
+        "note": "Transferred aboard scheduled cargo shuttle to Bonny Island.",
+        "handlerName": "Marine Cargo Captain"
+      },
+      {
+        "stage": "Delivered",
+        "status": "completed",
+        "timestamp": "Sep 19, 09:45 AM",
+        "location": "Bonny Island LNG Jetty",
+        "note": "Successfully received, unboxed, and signed off by Safety Officer M. Jumbo.",
+        "handlerName": "Safety Officer M. Jumbo"
+      }
+    ],
+    "thingsNotWanted": "No uncertified dry powder with expired factory tags",
+    "customNotes": "Full hydrostatic test certificates enclosed.",
+    "source": "direct"
+  },
+  {
+    "id": "ord-1000",
+    "ticketId": "CDP-TICKET-1000",
+    "ticketNumber": 1000,
+    "clientName": "Chief Tari George",
+    "companyName": "Rivers State Civil Infrastructure Consortium",
+    "email": "t.george@riverscivilinfra.ng",
+    "phone": "+234 803 710 4911",
+    "deliveryAddress": "Rumuokoro Flyover Project Site Yard, Obio/Akpor, Port Harcourt",
+    "items": [
+      {
+        "name": "Heavy-Duty Construction Site High-Ankle Safety Boots (S3 SRC)",
+        "category": "Boots",
+        "quantity": 80,
+        "unitPrice": 34500,
+        "specs": "Puncture-proof steel midsole and deep mud grip"
+      },
+      {
+        "name": "High-Visibility Construction Safety Vest (Class 2 / Class 3)",
+        "category": "Safety Gear",
+        "quantity": 100,
+        "unitPrice": 3500,
+        "specs": "Fluorescent lime green with 3M reflective tape and ID card pocket"
+      },
+      {
+        "name": "Heavy-Duty Impact & Cut-Resistant Rigging Gloves (EN 388 Level 5)",
+        "category": "Safety Gear",
+        "quantity": 100,
+        "unitPrice": 5800,
+        "specs": "TPR knuckle armor for rebar and steel handling"
+      }
+    ],
+    "status": "Quality Check",
+    "totalAmount": 3690000,
+    "dateCreated": "2026-09-19 08:15:00",
+    "lastUpdated": "2026-09-19 12:00:00",
+    "estimatedDelivery": "Today by 5:00 PM (Direct Site Dispatch)",
+    "carrierOrDriver": "Curome Construction Delivery Van (Driver: Emmanuel B.)",
+    "dispatchLocation": "Omodu St off NTA Road, Port Harcourt",
+    "trackingSteps": [
+      {
+        "stage": "Received",
+        "status": "completed",
+        "timestamp": "Sep 19, 08:15 AM",
+        "location": "Sales Headquarters",
+        "note": "Civil engineering project batch order validated.",
+        "handlerName": "Procurement Desk"
+      },
+      {
+        "stage": "Processing",
+        "status": "completed",
+        "timestamp": "Sep 19, 10:00 AM",
+        "location": "Warehouse Bay 3",
+        "note": "Boots, vests, and rigging gloves staged for final verification.",
+        "handlerName": "Warehouse Lead"
+      },
+      {
+        "stage": "Quality Check",
+        "status": "current",
+        "timestamp": "Sep 19, 12:00 PM",
+        "location": "Inspection Station",
+        "note": "Reinforced steel toe batch testing and high-vis reflectivity audit in progress.",
+        "handlerName": "Engr. Adebayo"
+      },
+      {
+        "stage": "Packed",
+        "status": "pending",
+        "timestamp": "Estimated 01:30 PM",
+        "location": "Packaging Line",
+        "note": "Bulk bundling with color-coded site division tags.",
+        "handlerName": "Logistics Dispatch"
+      },
+      {
+        "stage": "Dispatched",
+        "status": "pending",
+        "timestamp": "Estimated 02:30 PM",
+        "location": "Port Harcourt Express Route",
+        "note": "Direct transit to Rumuokoro flyover construction yard.",
+        "handlerName": "Driver Emmanuel B."
+      },
+      {
+        "stage": "Delivered",
+        "status": "pending",
+        "timestamp": "Estimated 05:00 PM",
+        "location": "Rumuokoro Site Yard",
+        "note": "Awaiting physical reception and sign-off by Site Engineer.",
+        "handlerName": "Site Manager"
+      }
+    ],
+    "thingsNotWanted": "No substandard low-visibility polyester vests",
+    "customNotes": "Urgent site batch for morning concrete pour shift.",
+    "source": "quote"
+  }
+]
