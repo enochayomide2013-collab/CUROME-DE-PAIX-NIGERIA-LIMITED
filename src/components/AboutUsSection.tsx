@@ -1,5 +1,6 @@
 import React from 'react';
 import { COMPANY_INFO, COMPANY_VALUES, LEADERSHIP_TEAM } from '../data/companyData';
+import { Logo } from './Logo';
 import {
   ShieldCheck,
   Target,
@@ -195,12 +196,16 @@ export const AboutUsSection: React.FC = () => {
                 className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-2xs flex flex-col justify-between space-y-4 max-w-md w-full"
               >
                 <div className="space-y-4">
-                  <div className="w-20 h-20 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center">
+                    {member.name.includes('Adebayo') ? (
+                      <Logo />
+                    ) : (
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
                   </div>
                   <div>
                     <h4 className="text-base font-bold text-slate-900">{member.name}</h4>

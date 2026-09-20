@@ -61,15 +61,6 @@ export const Hero: React.FC<HeroProps> = ({
               </div>
 
               <a
-                href="#orders"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-2xs cursor-pointer group"
-                id="hero-track-order-pill"
-              >
-                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
-                <span>Orders & Tracking (1000 - 999T)</span>
-              </a>
-
-              <a
                 href="#ratings"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300/80 text-amber-950 text-xs font-bold transition-all shadow-2xs cursor-pointer group"
                 id="hero-ratings-pill"

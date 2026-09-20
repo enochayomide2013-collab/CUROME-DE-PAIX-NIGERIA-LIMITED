@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { COMPANY_INFO } from '../data/companyData';
 import { getWhatsAppUrl } from '../utils/communication';
 import { MessageSquare, X, Send, Sparkles, Clock, CheckCheck, ShieldCheck, ChevronRight, ShieldAlert } from 'lucide-react';
@@ -22,6 +22,76 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
   const [internalAdminOpen, setInternalAdminOpen] = useState(false);
 
   const isAdminOpen = isOpenAdmin !== undefined ? isOpenAdmin : internalAdminOpen;
+
+  // Accessibility: Lock background scroll on small screens when drawer is open, and handle Escape key
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      if (window.innerWidth < 640) {
+        document.body.style.overflow = 'hidden';
+      }
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          playSoftPop();
+          setIsOpen(false);
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isOpen]);
+
+  // Synthesize a soft, organic 'pop' / bubble sound effect using Web Audio API
+  const playSoftPop = () => {
+    try {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContextClass) return;
+      const ctx = new AudioContextClass();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+
+      const now = ctx.currentTime;
+
+      // Resonant lowpass filter to produce a warm, gentle acoustic pop without harsh high frequencies
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1800, now);
+      filter.Q.setValueAtTime(3, now);
+
+      // Sine wave oscillator with frequency contour simulating a bubble pop
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      // Pitch contour: quick upward swoop then swift gentle drop
+      osc.frequency.setValueAtTime(360, now);
+      osc.frequency.exponentialRampToValueAtTime(840, now + 0.022);
+      osc.frequency.exponentialRampToValueAtTime(290, now + 0.08);
+
+      // Smooth attack and decay envelope
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.2, now + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.095);
+    } catch {
+      // Safe fallback if audio context blocked
+    }
+  };
+
+  const handleToggleChat = () => {
+    playSoftPop();
+    setIsOpen((prev) => !prev);
+  };
 
   const playAudioFeedback = (type: 'hover' | 'click') => {
     try {
@@ -119,41 +189,54 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
           <span className="sr-only">Secret Admin Logistics Portal</span>
         </button>
 
-        {/* Expanded Quick Message Dialog */}
+        {/* Expanded Quick Message Dialog / Full-Height Drawer on Mobile Devices */}
         {isOpen && (
-          <div className="absolute bottom-16 right-0 mb-2 w-80 sm:w-96 rounded-3xl bg-white shadow-2xl border border-slate-300/80 overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
+          <div
+            className="fixed inset-0 z-50 flex flex-col h-[100dvh] w-full bg-white sm:h-auto sm:max-h-[38rem] sm:absolute sm:inset-auto sm:bottom-16 sm:right-0 sm:mb-2 sm:w-96 sm:rounded-3xl sm:border sm:border-slate-300/80 sm:shadow-2xl sm:overflow-hidden animate-in fade-in zoom-in-95 sm:origin-bottom-right duration-200"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Curome de Paix WhatsApp Procurement Desk"
+            id="floating-whatsapp-drawer"
+          >
             {/* Chat Header with Response Time & Trust Indicators */}
-            <div className="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 p-4 text-white">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
+            <div className="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 p-4 text-white shrink-0 sm:rounded-t-3xl shadow-md sm:shadow-none">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative shrink-0">
                     <div className="w-11 h-11 rounded-full bg-white/20 ring-2 ring-white/30 flex items-center justify-center font-bold text-base shadow-inner">
                       <MessageSquare className="w-5 h-5 text-white" />
                     </div>
                     <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-400 ring-2 ring-emerald-900 shadow-xs" />
                   </div>
-                  <div>
-                    <h4 className="font-extrabold text-sm leading-tight text-white flex items-center gap-1.5">
+                  <div className="min-w-0">
+                    <h4 className="font-extrabold text-sm sm:text-base leading-tight text-white truncate flex items-center gap-1.5">
                       <span>Curome de Paix WhatsApp Desk</span>
                     </h4>
-                    <p className="text-[11px] text-emerald-100 font-medium flex items-center gap-1 mt-0.5">
+                    <p className="text-[11px] sm:text-xs text-emerald-100 font-medium flex items-center gap-1.5 mt-0.5">
                       <span>Port Harcourt Duty Desk</span>
                       <span>•</span>
-                      <span className="text-emerald-200 font-semibold">Active Now</span>
+                      <span className="text-emerald-200 font-semibold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                        Active Now
+                      </span>
                     </p>
                   </div>
                 </div>
                 <button
-                  onClick={() => setIsOpen(false)}
-                  className="text-white/80 hover:text-white p-1.5 rounded-full hover:bg-emerald-900/50 transition-colors"
-                  aria-label="Close WhatsApp chat"
+                  onClick={() => {
+                    playSoftPop();
+                    setIsOpen(false);
+                  }}
+                  className="text-white/80 hover:text-white min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-emerald-900/50 transition-colors cursor-pointer shrink-0"
+                  aria-label="Close WhatsApp chat drawer"
+                  id="close-whatsapp-chat-btn"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-6 h-6 sm:w-5 sm:h-5" />
                 </button>
               </div>
 
               {/* Response Time Indicator Badge for Extra Trust in Port Harcourt */}
-              <div className="mt-3 pt-2.5 border-t border-emerald-600/60 flex items-center justify-between text-[11px] text-emerald-50 bg-emerald-900/40 px-2.5 py-1.5 rounded-xl">
+              <div className="mt-3 pt-2.5 border-t border-emerald-600/60 flex items-center justify-between text-[11px] sm:text-xs text-emerald-50 bg-emerald-900/40 px-3 py-1.5 rounded-xl">
                 <div className="flex items-center gap-1.5 font-medium">
                   <Clock className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
                   <span>Response time: <strong className="text-white font-bold">Typically under 5 mins</strong></span>
@@ -165,62 +248,64 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
               </div>
             </div>
 
-            {/* Body */}
-            <div className="p-4 bg-slate-50 space-y-3 max-h-80 overflow-y-auto">
-              <div className="p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs text-xs text-slate-700 space-y-1">
-                <div className="font-bold text-slate-900 flex items-center gap-1.5 text-[11px] text-emerald-700">
-                  <Sparkles className="w-3.5 h-3.5" />
+            {/* Body: Stretches smoothly to fill full screen height on mobile while maintaining desktop scroll box */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-4 bg-slate-50 space-y-4 sm:space-y-3 sm:max-h-80 overscroll-contain">
+              <div className="p-3.5 sm:p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs text-xs text-slate-700 space-y-1.5">
+                <div className="font-bold text-slate-900 flex items-center gap-1.5 text-xs text-emerald-700">
+                  <Sparkles className="w-4 h-4 text-emerald-600" />
                   <span>Direct Technical Desk (Rivers State)</span>
                 </div>
-                <p className="leading-relaxed">
+                <p className="leading-relaxed text-slate-600">
                   Connect directly with our local Port Harcourt procurement officers. Select a topic or type your specifications below:
                 </p>
               </div>
 
               {/* Quick Greeting Chips */}
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <div className="space-y-2 sm:space-y-1.5">
+                <span className="text-[11px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
                   Quick Greeting Topics:
                 </span>
-                <div className="space-y-1">
+                <div className="space-y-2 sm:space-y-1">
                   {quickPrompts.map((p, idx) => (
                     <button
                       key={idx}
                       onClick={() => {
+                        playSoftPop();
                         setSelectedMessage(p.text);
                       }}
-                      className={`w-full text-left p-2.5 rounded-xl text-xs transition-all flex items-center justify-between cursor-pointer ${
+                      className={`w-full text-left p-3 sm:p-2.5 rounded-xl text-xs transition-all flex items-center justify-between cursor-pointer min-h-[44px] ${
                         selectedMessage === p.text
                           ? 'bg-emerald-50 border-2 border-emerald-500 text-emerald-950 font-bold shadow-xs'
-                          : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300'
+                          : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300 active:bg-slate-100'
                       }`}
                     >
-                      <span>{p.label}</span>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span className="font-semibold pr-2">{p.label}</span>
+                      <ChevronRight className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" />
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Message preview / edit box */}
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                  Message Preview:
+              <div className="space-y-2 sm:space-y-1">
+                <span className="text-[11px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                  Message Preview / Custom Specifications:
                 </span>
                 <textarea
-                  rows={3}
+                  rows={4}
                   value={selectedMessage}
                   onChange={(e) => setSelectedMessage(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-slate-300 bg-white text-xs text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 font-normal shadow-inner"
+                  className="w-full p-3 sm:p-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-xs text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 font-normal shadow-inner leading-relaxed min-h-[90px] sm:min-h-[72px]"
+                  placeholder="Type your message for Curome de Paix..."
                 />
               </div>
             </div>
 
-            {/* Footer Trigger with High Contrast and Font Weight */}
-            <div className="p-3 bg-white border-t border-slate-200">
+            {/* Footer Trigger with High Contrast, Finger-friendly Height and Safe Area Padding */}
+            <div className="p-4 sm:p-3 bg-white border-t border-slate-200 shrink-0 sm:rounded-b-3xl pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-3">
               <button
                 onClick={() => handleLaunchWhatsApp()}
-                className="w-full py-3.5 px-4 rounded-xl font-black text-xs text-white bg-emerald-950 hover:bg-black transition-all duration-200 flex items-center justify-center gap-2 shadow-xl border-2 border-emerald-500 hover:border-emerald-400 cursor-pointer active:scale-98 tracking-wide uppercase"
+                className="w-full py-4 sm:py-3.5 px-4 rounded-2xl sm:rounded-xl font-black text-xs sm:text-xs text-white bg-emerald-950 hover:bg-black transition-all duration-200 flex items-center justify-center gap-2 shadow-xl border-2 border-emerald-500 hover:border-emerald-400 cursor-pointer active:scale-98 tracking-wide uppercase min-h-[48px]"
                 id="send-whatsapp-floating-btn"
               >
                 <Send className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -232,7 +317,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
 
         {/* Floating Pill / Button with Smooth Scale-Up Animation on Hover */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleToggleChat}
           className="group flex items-center gap-2.5 px-4 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl hover:shadow-2xl transition-all duration-300 ease-out cursor-pointer hover:scale-105 active:scale-95 ring-2 ring-white/80"
           id="floating-whatsapp-toggle-btn"
           aria-label="Chat with Curome de Paix on WhatsApp"

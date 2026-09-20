@@ -197,8 +197,8 @@ ${submission.thingsNotWanted || 'None'}
                 <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400">
                   Your Unique Order Ticket Reference
                 </span>
-                <span className="text-[9px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">
-                  Range: 1,000 – 999 Trillion
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-slate-800 text-emerald-400 border border-emerald-800/40 font-mono">
+                  Central Depot Verified
                 </span>
               </div>
               <div className="text-xl sm:text-2xl font-black font-mono text-amber-400 tracking-wide mt-0.5">
@@ -404,7 +404,7 @@ ${submission.thingsNotWanted || 'None'}
 
                   <button
                     type="submit"
-                    disabled={isSubmittingRating}
+                    disabled={isSubmittingRating || ratingComment.trim().length < 5}
                     className="px-4 py-2 rounded-xl text-xs font-bold text-amber-950 bg-amber-400 hover:bg-amber-300 transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50"
                   >
                     <Send className="w-3.5 h-3.5" />

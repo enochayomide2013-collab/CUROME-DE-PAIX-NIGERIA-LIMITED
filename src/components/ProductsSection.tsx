@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import { PRODUCTS_CATALOG, COMPANY_INFO } from '../data/companyData';
+import React, { useState, useEffect } from 'react';
+import { COMPANY_INFO } from '../data/companyData';
 import { ProductItem, ColorVariant } from '../types';
+import { getAllLiveProducts, subscribeToProducts } from '../utils/productsManager';
 import { formatNaira, copyToClipboard } from '../utils/communication';
 import { ImageLightboxModal } from './ImageLightboxModal';
+import { ProductCompareModal } from './ProductCompareModal';
+import { EquipmentVisual } from './EquipmentVisual';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   ShieldCheck,
   HardHat,
@@ -17,6 +21,9 @@ import {
   Flame,
   ShieldAlert,
   Package,
+  Scale,
+  X,
+  ArrowRight,
 } from 'lucide-react';
 
 interface ProductsSectionProps {
@@ -39,6 +46,43 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
   const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({});
   const [selectedColors, setSelectedColors] = useState<Record<string, ColorVariant>>({});
 
+  // Product Comparison state (Side-by-side technical specs)
+  const [compareList, setCompareList] = useState<ProductItem[]>([]);
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState<boolean>(false);
+
+  const handleToggleCompare = (product: ProductItem) => {
+    const isAlreadyIn = compareList.some((item) => item.id === product.id);
+    if (isAlreadyIn) {
+      setCompareList((prev) => prev.filter((item) => item.id !== product.id));
+    } else {
+      if (compareList.length >= 3) {
+        // Replace first item if full (up to 3 items)
+        setCompareList((prev) => [...prev.slice(1), product]);
+      } else {
+        setCompareList((prev) => [...prev, product]);
+      }
+    }
+  };
+
+  const handleRemoveFromCompare = (productId: string) => {
+    setCompareList((prev) => prev.filter((item) => item.id !== productId));
+  };
+
+  const handleClearCompare = () => {
+    setCompareList([]);
+    setIsCompareModalOpen(false);
+  };
+
+  // Dynamic live products synced with Admin Adon section
+  const [liveProducts, setLiveProducts] = useState<ProductItem[]>(() => getAllLiveProducts());
+
+  useEffect(() => {
+    const unsubscribe = subscribeToProducts((updated) => {
+      setLiveProducts(updated);
+    });
+    return unsubscribe;
+  }, []);
+
   const categories = [
     { id: 'all', label: 'All Safety Equipment & Workwear', icon: Layers },
     { id: 'boots', label: 'Construction & Rig Safety Boots', icon: Footprints },
@@ -52,8 +96,8 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
 
   const filteredProducts =
     activeCategory === 'all'
-      ? PRODUCTS_CATALOG
-      : PRODUCTS_CATALOG.filter((p) => p.category === activeCategory);
+      ? liveProducts
+      : liveProducts.filter((p) => p.category === activeCategory);
 
   const handleSizeChange = (productId: string, size: string) => {
     setSelectedSizes((prev) => ({ ...prev, [productId]: size }));
@@ -61,6 +105,11 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
 
   const handleColorChange = (productId: string, color: ColorVariant) => {
     setSelectedColors((prev) => ({ ...prev, [productId]: color }));
+    setBrokenImages((prev) => {
+      const next = { ...prev };
+      delete next[productId];
+      return next;
+    });
   };
 
   const handleAddToCartClick = (product: ProductItem) => {
@@ -112,12 +161,36 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               Safety Boots, Extinguishers, Coveralls & Site Equipment
             </h2>
-            <p className="text-base text-slate-600 leading-relaxed">
-              Manufactured and supplied directly from our Port Harcourt facility off NTA Road. Fully equipped with
-              certified construction steel-toe boots, DCP & CO2 fire extinguishers, fall arrest safety harnesses,
-              heavy-duty work coveralls (in multiple 4K color display options), impact helmets, anti-fog eye protection, high-visibility vests, and site safety gear.
-              Pick your required equipment size and color, click any item for a high-res display preview, and transmit your procurement cart.
-            </p>
+            {/* Direct Side-by-Side Comparison Action */}
+            <div className="pt-2 flex flex-wrap items-center gap-3">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                type="button"
+                onClick={() => {
+                  if (compareList.length === 0 && liveProducts.length > 0) {
+                    // Pre-select two high-demand industrial items from live products
+                    setCompareList([liveProducts[0], liveProducts[1] || liveProducts[0]]);
+                  }
+                  setIsCompareModalOpen(true);
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-orange-600/20 transition-all cursor-pointer"
+                id="open-side-by-side-compare-btn"
+              >
+                <Scale className="w-4 h-4 text-amber-200" />
+                <span>
+                  {compareList.length >= 2
+                    ? `Compare ${compareList.length} Items Side-by-Side`
+                    : 'Open Side-by-Side Specs Comparison'}
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-white/20 text-[11px]">
+                  {compareList.length > 0 ? `${compareList.length}/3 selected` : 'Live Demo'}
+                </span>
+              </motion.button>
+              <span className="text-xs text-slate-500 hidden sm:inline">
+                Click <strong>"Compare"</strong> on any product card below to benchmark standards & prices.
+              </span>
+            </div>
           </div>
 
           {/* Pricing & Transmission Note */}
@@ -143,14 +216,16 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
           </div>
         </div>
 
-        {/* Category Filter Pills */}
+        {/* Category Filter Pills with elevated micro-interactions */}
         <div className="mt-8 flex items-center gap-2 overflow-x-auto pb-3 scrollbar-none">
           {categories.map((cat) => {
             const Icon = cat.icon;
             const isSelected = activeCategory === cat.id;
             return (
-              <button
+              <motion.button
                 key={cat.id}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={() => setActiveCategory(cat.id)}
                 className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap flex items-center gap-2 transition-all cursor-pointer ${
                   isSelected
@@ -167,10 +242,10 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                   }`}
                 >
                   {cat.id === 'all'
-                    ? PRODUCTS_CATALOG.length
-                    : PRODUCTS_CATALOG.filter((p) => p.category === cat.id).length}
+                    ? liveProducts.length
+                    : liveProducts.filter((p) => p.category === cat.id).length}
                 </span>
-              </button>
+              </motion.button>
             );
           })}
         </div>
@@ -183,11 +258,18 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
             const activeColorObj = selectedColors[product.id];
             const activeImage = activeColorObj ? activeColorObj.image : product.image;
             const currentSelectedSize = selectedSizes[product.id] || (product.availableSizes?.[0] || '');
+            const isCompared = compareList.some((item) => item.id === product.id);
 
             return (
-              <div
+              <motion.div
                 key={product.id}
-                className="group bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+                className={`group bg-white rounded-2xl border shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden ${
+                  isCompared
+                    ? 'ring-2 ring-orange-500 border-orange-400 shadow-orange-500/10'
+                    : 'border-slate-200/90'
+                }`}
                 id={`product-card-${product.id}`}
               >
                 <div>
@@ -204,27 +286,16 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                       });
                     }}
                   >
-                    {isImgBroken ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-slate-300 bg-slate-800">
-                        <ShieldCheck className="w-12 h-12 text-orange-400 mb-2" />
-                        <span className="font-bold text-xs text-white">{product.name}</span>
-                        <span className="text-[10px] text-slate-400 mt-1">Certified Industrial Gear</span>
-                      </div>
-                    ) : (
-                      <img
-                        src={activeImage}
-                        alt={product.name}
-                        onError={() => handleImageError(product.id)}
-                        className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500 ease-out"
-                        loading="lazy"
-                      />
-                    )}
-
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-black/20 opacity-60 group-hover:opacity-80 transition-opacity" />
+                    <EquipmentVisual
+                      product={product}
+                      activeImage={activeImage}
+                      selectedColor={activeColorObj}
+                      showBadge={true}
+                      altText={product.name}
+                    />
 
                     {/* Badges */}
-                    <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+                    <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-20 pointer-events-none">
                       {product.badges.map((b, i) => (
                         <span
                           key={i}
@@ -235,27 +306,16 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                       ))}
                     </div>
 
-                    {/* Active Selected Color Badge on Image */}
-                    {product.availableColors && product.availableColors.length > 0 && (
-                      <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-950/90 backdrop-blur-md text-[10px] font-bold text-white border border-slate-700/80 shadow-md animate-in fade-in">
-                        <span
-                          className="w-2.5 h-2.5 rounded-full border border-white/60 shrink-0"
-                          style={{ backgroundColor: activeColorObj?.hex || product.availableColors[0]?.hex }}
-                        />
-                        <span>{activeColorObj?.name || product.availableColors[0]?.name}</span>
-                      </div>
-                    )}
-
                     {/* Stock & Location Tag */}
                     {product.inStock && (
-                      <div className="absolute bottom-3 left-3 text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-600/95 text-white shadow-sm flex items-center gap-1">
+                      <div className="absolute bottom-3 left-3 z-20 text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-600/95 text-white shadow-sm flex items-center gap-1 pointer-events-none">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-200 animate-pulse" />
                         <span>In Stock • Port Harcourt</span>
                       </div>
                     )}
 
                     {/* Zoom Hint */}
-                    <div className="absolute bottom-3 right-3 text-[10px] text-white/90 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-black/60 px-2.5 py-1 rounded-lg backdrop-blur-xs font-semibold">
+                    <div className="absolute bottom-3 right-3 z-20 text-[10px] text-white/90 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-black/60 px-2.5 py-1 rounded-lg backdrop-blur-xs font-semibold pointer-events-none">
                       <ZoomIn className="w-3.5 h-3.5 text-orange-400" />
                       <span>4K Preview</span>
                     </div>
@@ -263,17 +323,36 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
 
                   {/* Content & Options */}
                   <div className="p-5 space-y-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-2">
                       <span className="text-[11px] font-bold text-orange-600 uppercase tracking-wider">
                         {product.category}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedProductDetails(product)}
-                        className="text-[11px] font-bold text-slate-500 hover:text-orange-600 transition-colors cursor-pointer"
-                      >
-                        Details & Standards
-                      </button>
+                      <div className="flex items-center gap-1.5">
+                        <motion.button
+                          whileTap={{ scale: 0.9 }}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleCompare(product);
+                          }}
+                          className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1 cursor-pointer ${
+                            isCompared
+                              ? 'bg-orange-600 text-white border-orange-600 shadow-xs'
+                              : 'bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-orange-600 border-slate-200'
+                          }`}
+                          title="Compare side-by-side technical specs"
+                        >
+                          <Scale className="w-3 h-3" />
+                          <span>{isCompared ? 'Comparing' : 'Compare'}</span>
+                        </motion.button>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedProductDetails(product)}
+                          className="text-[11px] font-bold text-slate-400 hover:text-slate-800 transition-colors cursor-pointer"
+                        >
+                          Specs
+                        </button>
+                      </div>
                     </div>
 
                     <h3 className="text-base font-bold text-slate-900 group-hover:text-orange-600 transition-colors line-clamp-2">
@@ -294,8 +373,10 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                           {product.availableColors.map((col, idx) => {
                             const isSelected = (activeColorObj?.name || product.availableColors![0]?.name) === col.name;
                             return (
-                              <button
+                              <motion.button
                                 key={idx}
+                                whileHover={{ scale: 1.2 }}
+                                whileTap={{ scale: 0.9 }}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleColorChange(product.id, col);
@@ -359,12 +440,14 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                       </span>
                     </div>
 
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => handleAddToCartClick(product)}
                       className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-md ${
                         isJustAdded
-                          ? 'bg-emerald-600 text-white'
-                          : 'bg-orange-600 hover:bg-orange-500 text-white hover:shadow-orange-500/30 active:scale-95'
+                          ? 'bg-emerald-600 text-white shadow-emerald-600/30'
+                          : 'bg-orange-600 hover:bg-orange-500 text-white hover:shadow-orange-500/30'
                       }`}
                       title="Add selected size & color to procurement cart"
                     >
@@ -379,10 +462,10 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                           <span>Add to Cart</span>
                         </>
                       )}
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -433,12 +516,17 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                   setLightboxProduct(p);
                 }}
               >
-                <img
-                  src={selectedProductDetails.image}
-                  alt={selectedProductDetails.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                <EquipmentVisual
+                  product={selectedProductDetails}
+                  activeImage={selectedProductDetails.image}
+                  selectedColor={
+                    selectedColors[selectedProductDetails.id] ||
+                    selectedProductDetails.availableColors?.[0]
+                  }
+                  showBadge={true}
+                  altText={selectedProductDetails.name}
                 />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center pointer-events-none z-20">
                   <span className="px-4 py-2 rounded-xl bg-slate-900/90 text-white text-xs font-bold flex items-center gap-2 shadow-lg group-hover:scale-105 transition-transform">
                     <ZoomIn className="w-4 h-4 text-orange-400" />
                     <span>View High-Resolution 4K Equipment Display</span>
@@ -518,6 +606,86 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
             </div>
           </div>
         )}
+
+        {/* Floating Side-by-Side Comparison Drawer Bar */}
+        <AnimatePresence>
+          {compareList.length > 0 && (
+            <motion.div
+              initial={{ y: 80, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 80, opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-2xl bg-slate-950/95 text-white p-3 sm:p-4 rounded-2xl shadow-2xl border border-orange-500/40 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-3"
+            >
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <div className="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 shrink-0">
+                  <Scale className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-white tracking-wide">
+                      Technical Compare
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-orange-500 text-slate-950 text-[10px] font-black">
+                      {compareList.length} / 3 Items
+                    </span>
+                  </div>
+                  {/* Small thumbnails preview */}
+                  <div className="flex items-center gap-1.5 mt-1 overflow-x-auto">
+                    {compareList.map((item) => (
+                      <div
+                        key={item.id}
+                        className="relative group flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700 text-[10px] text-slate-300"
+                      >
+                        <span className="truncate max-w-[90px] sm:max-w-[120px] font-medium">{item.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFromCompare(item.id)}
+                          className="hover:text-red-400 cursor-pointer ml-1"
+                          title="Remove"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button
+                  type="button"
+                  onClick={handleClearCompare}
+                  className="px-3 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                >
+                  Clear
+                </button>
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.96 }}
+                  type="button"
+                  onClick={() => setIsCompareModalOpen(true)}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-orange-950 transition-all cursor-pointer"
+                >
+                  <span>Compare Specs</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Technical Product Comparison Modal */}
+        <ProductCompareModal
+          isOpen={isCompareModalOpen}
+          onClose={() => setIsCompareModalOpen(false)}
+          products={compareList}
+          onRemoveFromCompare={handleRemoveFromCompare}
+          onAddToCart={(product) => {
+            handleAddToCartClick(product);
+          }}
+          onClearCompare={handleClearCompare}
+        />
       </div>
     </section>
   );

@@ -87,7 +87,7 @@ export const OrderTrackingSection: React.FC<OrderTrackingSectionProps> = ({
     const clean = query.trim();
 
     if (!clean) {
-      setSearchError('Please enter your Ticket Number (1000 to 999000000000000).');
+      setSearchError('Please enter your Order Ticket Number (e.g. CDP-TICKET-...).');
       return;
     }
 
@@ -351,7 +351,7 @@ export const OrderTrackingSection: React.FC<OrderTrackingSectionProps> = ({
                       type="text"
                       value={searchTicket}
                       onChange={(e) => setSearchTicket(e.target.value)}
-                      placeholder="Enter Ticket # (e.g. 1000 - 999000000000000)"
+                      placeholder="Enter Ticket # (e.g. CDP-TICKET-847291048291)"
                       className="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm font-mono focus:outline-hidden focus:ring-2 focus:ring-orange-500"
                     />
                     <button
@@ -533,7 +533,7 @@ export const OrderTrackingSection: React.FC<OrderTrackingSectionProps> = ({
                     type="text"
                     value={searchTicket}
                     onChange={(e) => setSearchTicket(e.target.value)}
-                    placeholder="Enter your Ticket # (e.g. 1000 - 999000000000000 or CDP-TICKET-...)"
+                    placeholder="Enter your Ticket # (e.g. CDP-TICKET-847291048291)"
                     className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-slate-950 border border-slate-600 text-white placeholder:text-slate-500 text-sm sm:text-base focus:outline-hidden focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-mono tracking-wide"
                     id="order-tracking-search-input"
                   />

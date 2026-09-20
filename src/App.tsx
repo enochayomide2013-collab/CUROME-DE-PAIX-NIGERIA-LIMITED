@@ -22,6 +22,7 @@ import { FaqSection } from './components/FaqSection';
 import { RatingsSection } from './components/RatingsSection';
 import { OrderTrackingSection } from './components/OrderTrackingSection';
 import { SecretAdminOrdersModal } from './components/SecretAdminOrdersModal';
+import { CuromeFlameBanner } from './components/CuromeFlameBanner';
 import { ProductItem, ServiceItem, CartItem, CartSubmission } from './types';
 import { COMPANY_INFO, PRODUCTS_CATALOG } from './data/companyData';
 
@@ -45,33 +46,8 @@ export default function App() {
     setIsCuriAIOpen(true);
   };
 
-  // Initial seed cart with coveralls and boots sample so user sees cart ready
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 'initial-1',
-      productId: 'coveralls-premium-hd',
-      name: 'Heavy-Duty Industrial Cotton Coveralls (HD-100)',
-      category: 'Coveralls',
-      quantity: 25,
-      unitPrice: 28500,
-      customSpecifications: 'Double reflective tape, orange colorway with corporate logo embroidery',
-      thingsNotWanted: 'No plastic buttons, no synthetic polyester blend',
-      selectedSize: 'L (42-44)',
-      selectedColor: 'High-Visibility Orange',
-      customLogo: true,
-    },
-    {
-      id: 'initial-2',
-      productId: 'helmets-ratchet-pro',
-      name: 'Industrial Cranial Safety Helmet (Ratchet Wheel)',
-      category: 'Helmets',
-      quantity: 25,
-      unitPrice: 8500,
-      customSpecifications: 'Equipped with 4-point chin strap harness and sweatband',
-      thingsNotWanted: 'No non-ratchet pinlock mechanisms',
-      selectedColor: 'Safety White',
-    },
-  ]);
+  // Initial seed cart empty
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   // Active section tracking on scroll
   useEffect(() => {
@@ -311,6 +287,12 @@ export default function App() {
 
         {/* 9. Contact Section (Phone, WhatsApp, Office Address off NTA Road PH, Contact form to decuromeintl@gmail.com) */}
         <ContactSection onFormSubmitted={handleSubmissionComplete} />
+
+        {/* 10. Interactive Bottom Curome Flame Forge Banner */}
+        <CuromeFlameBanner
+          onOpenQuote={() => handleOpenQuote(null)}
+          onOpenCart={() => setIsCartOpen(true)}
+        />
       </main>
 
       {/* Footer */}

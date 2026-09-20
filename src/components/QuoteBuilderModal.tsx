@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { PRODUCTS_CATALOG, COMPANY_INFO } from '../data/companyData';
+import { COMPANY_INFO } from '../data/companyData';
 import { ProductItem } from '../types';
+import { getAllLiveProducts } from '../utils/productsManager';
 import { formatNaira, getWhatsAppUrl, generateTicketId, copyToClipboard } from '../utils/communication';
 import {
   X,
@@ -39,17 +40,19 @@ export const QuoteBuilderModal: React.FC<QuoteBuilderModalProps> = ({
       setTimeout(() => setCopiedEmail(false), 2000);
     }
   };
+  const allProducts = getAllLiveProducts();
+
   // State for item quantities
   const [quantities, setQuantities] = useState<Record<string, number>>(() => {
     const initial: Record<string, number> = {};
-    PRODUCTS_CATALOG.forEach((p) => {
+    const prods = getAllLiveProducts();
+    prods.forEach((p) => {
       initial[p.id] = initialProduct?.id === p.id ? 20 : 0;
     });
-    // If no initial product, set default starter batch
-    if (!initialProduct) {
-      initial['coveralls-premium-hd'] = 25;
-      initial['helmets-ratchet-pro'] = 25;
-      initial['boots-steel-toe-s3'] = 25;
+    // If no initial product, set default starter batch on first 2 available items
+    if (!initialProduct && prods.length > 0) {
+      if (prods[0]) initial[prods[0].id] = 25;
+      if (prods[1]) initial[prods[1].id] = 25;
     }
     return initial;
   });
@@ -80,7 +83,7 @@ export const QuoteBuilderModal: React.FC<QuoteBuilderModalProps> = ({
   };
 
   // Calculations
-  const selectedItems = PRODUCTS_CATALOG.filter((p) => (quantities[p.id] || 0) > 0);
+  const selectedItems = allProducts.filter((p) => (quantities[p.id] || 0) > 0);
   const totalUnits = selectedItems.reduce((acc, p) => acc + (quantities[p.id] || 0), 0);
 
   const rawSubtotal = selectedItems.reduce(
@@ -238,7 +241,7 @@ Recipient Email: ${COMPANY_INFO.email}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
-              {PRODUCTS_CATALOG.map((p) => {
+              {allProducts.map((p) => {
                 const qty = quantities[p.id] || 0;
                 return (
                   <div

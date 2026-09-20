@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Logo } from './Logo';
 import { COMPANY_INFO } from '../data/companyData';
 import { getWhatsAppUrl, getPhoneCallUrl, getMailToUrl, copyToClipboard } from '../utils/communication';
+import { CuromeFlameElevate } from './CuromeFlameElevate';
 import {
   Phone,
   MessageSquare,
@@ -288,6 +289,11 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Elevate Micro-Interaction with Fiery Curome Emblem */}
+        <div className="mt-10">
+          <CuromeFlameElevate />
         </div>
 
         {/* Bottom copyright bar */}

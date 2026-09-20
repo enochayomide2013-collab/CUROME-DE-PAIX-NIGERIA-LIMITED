@@ -42,6 +42,10 @@ export const ImageLightboxModal: React.FC<ImageLightboxModalProps> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const selectedColorObj =
+    product?.availableColors?.find((c) => c.name === selectedColorName) ||
+    product?.availableColors?.[0];
+
   // Reset zoom and set default image, color, size when modal opens or product changes
   useEffect(() => {
     if (product) {
@@ -184,19 +188,61 @@ export const ImageLightboxModal: React.FC<ImageLightboxModalProps> = ({
               className="relative max-w-full max-h-[58vh] flex items-center justify-center"
             >
               {imgError ? (
-                <div className="w-80 h-80 rounded-2xl bg-slate-800 border border-slate-700 flex flex-col items-center justify-center p-6 text-center text-slate-300">
-                  <ShieldCheck className="w-16 h-16 text-orange-500 mb-3" />
+                <div className="w-80 h-80 rounded-2xl bg-slate-850 border border-slate-750 flex flex-col items-center justify-center p-6 text-center text-slate-300">
+                  <div
+                    className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg mb-3 border border-white/20"
+                    style={{ backgroundColor: selectedColorObj?.hex || '#f97316' }}
+                  >
+                    <ShieldCheck className="w-10 h-10 text-white" />
+                  </div>
                   <div className="text-base font-bold text-white">{product.name}</div>
-                  <div className="text-xs text-slate-400 mt-1">Certified Industrial Safety Equipment</div>
+                  {selectedColorName && (
+                    <div className="text-xs font-bold text-orange-400 mt-1">
+                      Color Variant: {selectedColorName}
+                    </div>
+                  )}
+                  <div className="text-xs text-slate-400 mt-1">Certified Industrial Safety Equipment (RC-7473017)</div>
                 </div>
               ) : (
-                <img
-                  src={activeImage || product.image}
-                  alt={product.name}
-                  onError={() => setImgError(true)}
-                  className="max-w-full max-h-[56vh] object-contain rounded-2xl shadow-2xl pointer-events-none"
-                  draggable={false}
-                />
+                <div className="relative max-w-full max-h-[56vh] flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl">
+                  <img
+                    src={activeImage || product.image}
+                    alt={product.name}
+                    onError={() => {
+                      if (activeImage !== product.image) {
+                        setActiveImage(product.image);
+                      } else {
+                        setImgError(true);
+                      }
+                    }}
+                    className="max-w-full max-h-[56vh] object-contain rounded-2xl pointer-events-none transition-all duration-300"
+                    draggable={false}
+                  />
+
+                  {/* Dynamic Colorway Overlay in 4K Lightbox */}
+                  {selectedColorObj && selectedColorObj.hex && (
+                    <div
+                      className="absolute inset-0 pointer-events-none transition-all duration-500 rounded-2xl"
+                      style={{
+                        backgroundColor: selectedColorObj.hex,
+                        mixBlendMode:
+                          selectedColorObj.hex.toLowerCase() === '#ffffff'
+                            ? 'screen'
+                            : selectedColorObj.hex.toLowerCase() === '#18181b' ||
+                              selectedColorObj.hex.toLowerCase() === '#334155'
+                            ? 'multiply'
+                            : 'color',
+                        opacity:
+                          selectedColorObj.hex.toLowerCase() === '#ffffff'
+                            ? 0.35
+                            : selectedColorObj.hex.toLowerCase() === '#18181b'
+                            ? 0.55
+                            : 0.65,
+                      }}
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
               )}
             </div>
           </div>
@@ -253,7 +299,8 @@ export const ImageLightboxModal: React.FC<ImageLightboxModalProps> = ({
                       key={idx}
                       onClick={() => {
                         setSelectedColorName(col.name);
-                        setActiveImage(col.image);
+                        setActiveImage(col.image || product.image);
+                        setImgError(false);
                         handleResetZoom();
                       }}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
